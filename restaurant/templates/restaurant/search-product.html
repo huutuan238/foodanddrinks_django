@@ -1,0 +1,49 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+  <div class="arriv">
+    <div class="container">
+      <div class="special">
+        <h3>{% trans 'List Products' %}</h3>
+        <div class="specia-top">
+          <ul class="grid_2">
+          {% for product in products %}
+            <li>
+              <a href="{% url 'product_details' product.id %}"><img src="{{ product.image.url }}" class="img-responsive" alt=""></a>
+              <div class="special-info grid_1 simpleCart_shelfItem">
+                <h5>{{ product.name }}</h5>
+                <div class="rate">
+                  <div class="product-rating">
+                    <i class="fa fa-star{% if product.vote < 1 %}-o empty{% endif %}"></i>
+                    <i class="fa fa-star{% if product.vote < 2 %}-o empty{% endif %}"></i>
+                    <i class="fa fa-star{% if product.vote < 3 %}-o empty{% endif %}"></i>
+                    <i class="fa fa-star{% if product.vote < 4 %}-o empty{% endif %}"></i>
+                    <i class="fa fa-star{% if product.vote < 5 %}-o empty{% endif %}"></i>
+                  </div>
+                </div>
+                <div class="item_add"><span class="item_price"><h6>{{ product.price}}</h6></span></div>
+                <div class="item_add"><span class="item_price"><a href="#">add to cart</a></span></div>
+              </div>
+            </li>
+          {% endfor %}
+
+          <div class="clearfix"> </div>
+          <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page=1&search={{ query }}">&laquo;</a>
+                <a href="?page={{ page_obj.previous_page_number }}&search={{ query }}">{{ page_obj.previous_page_number }}</a>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&search={{ query }}">{{ page_obj.next_page_number }}</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}&search={{ query }}">&raquo;</a>
+            {% endif %}
+          </div>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

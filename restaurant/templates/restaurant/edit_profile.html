@@ -1,0 +1,85 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}<title>{% trans 'Profile Page' %}</title>{% endblock %}
+
+{% block content %}
+  <div class="arriv">
+    <div class="container">
+      <!-- start registration -->
+      <div class="registration">
+        <div class="row single">
+          <div class="col-md-12 det">
+            <h2><span>{% trans 'Update profile' %}</span></h2>
+            <form method="POST" enctype = "multipart/form-data">
+              {% if u_form.errors %}
+                {% for field in u_form %}
+                  {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                      <p><strong>{{ error|escape }}</strong></p>
+                    </div>
+                  {% endfor %}
+                {% endfor %}
+                {% for error in u_form.non_field_errors %}
+                  <div class="alert alert-danger">
+                    <p><strong>{{ error|escape }}</strong></p>
+                  </div>
+                {% endfor %}
+              {% endif %}
+              {% if p_form.errors %}
+                {% for field in p_form %}
+                  {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                      <p><strong>{{ error|escape }}</strong></p>
+                    </div>
+                  {% endfor %}
+                {% endfor %}
+                {% for error in p_form.non_field_errors %}
+                  <div class="alert alert-danger">
+                    <p><strong>{{ error|escape }}</strong></p>
+                  </div>
+                {% endfor %}
+              {% endif %}
+
+              {% csrf_token %}
+              <div class="row">
+                <div class="col-md-6">
+                  {% for field in u_form %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+                      {{ field }}
+                    </div>
+                  {% endfor %}
+
+                </div>
+                <div class="col-md-6">
+                  {% for field in p_form %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+                      {{ field }}
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="form-group">
+                  <button class="btn btn-outline-info" type="submit">Update</button>
+              </div>
+            </form>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      document.getElementById("id_avatar").onchange = function () {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            // get loaded data and render thumbnail.
+            document.getElementById("image").src = e.target.result;
+        };
+
+        // read the image file as a data URL.
+        reader.readAsDataURL(this.files[0]);
+      };
+    </script>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}<title>Sign up</title>{% endblock %}
+
+{% block content %}
+
+<div class="container">
+	<div class="main">
+		<div class="registration">
+			<div class="registration_left">
+			<h2>new user? <span> create an account </span></h2>
+			<script>
+				(function() {
+
+				// Create input element
+				var inputs = document.createElement('input');
+
+				// Create the supports object
+				var supports = {};
+
+				supports.autofocus   = 'autofocus' in inputs;
+				supports.required    = 'required' in inputs;
+				supports.placeholder = 'placeholder' in inputs;
+
+				// Fallback for autofocus attribute
+				if(!supports.autofocus) {
+
+				}
+
+				// Fallback for required attribute
+				if(!supports.required) {
+
+				}
+
+				// Fallback for placeholder attribute
+				if(!supports.placeholder) {
+
+				}
+
+				// Change text inside send button on submit
+				var send = document.getElementById('register-submit');
+				if(send) {
+					send.onclick = function () {
+						this.innerHTML = '...Sending';
+					}
+				}
+
+			})();
+
+			</script>
+			 <div class="registration_form">
+			 <!-- Form -->
+				<form id="registration_left" method="post">
+
+					{% if form.errors %}
+						{% for field in form %}
+							{% for error in field.errors %}
+								<div class="alert alert-danger">
+									<p><strong>{{ error|escape }}</strong></p>
+								</div>
+							{% endfor %}
+						{% endfor %}
+						{% for error in form.non_field_errors %}
+							<div class="alert alert-danger">
+								<p><strong>{{ error|escape }}</strong></p>
+							</div>
+						{% endfor %}
+					{% endif %}
+
+					{% csrf_token %}
+					<div class="form-group">
+						<label >{% trans 'First Name' %}</label>
+						<input placeholder="first name:" type="text" name="first_name" tabindex="1" required autofocus>
+					</div>
+					<div class="form-group">
+							<label >{% trans 'Last Name' %}</label>
+							<input placeholder="last name:" type="text" name="last_name" tabindex="2" required autofocus>
+					</div>
+					<div class="form-group">
+							<label >{% trans 'User Name' %}</label>
+							<input placeholder="username" type="text" name="username" tabindex="3" required>
+					</div>
+					<div class="form-group">
+							<label >{% trans 'Email' %}</label>
+							<input placeholder="email address:" type="email" name="email" tabindex="3" required>
+					</div>
+					<div class="form-group">
+							<label >{% trans 'Password' %}</label>
+							<input placeholder="password" type="password" name="password1" tabindex="4" required>
+					</div>
+					<div class="form-group">
+							<label >{% trans 'Password confirm' %}</label>
+							<input placeholder="retype password" type="password" name="password2" tabindex="4" required>
+					</div>
+					<div>
+						<input type="submit" value="create an account" id="register-submit">
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

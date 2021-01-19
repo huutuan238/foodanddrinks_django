@@ -1,0 +1,179 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}<title>{% trans 'Product Details' %}</title>{% endblock %}
+
+{% block content %}
+
+<!-- section -->
+<div class="arriv">
+  <!-- container -->
+  <div class="container">
+    <!-- row -->
+    <div class="row">
+      <!--  Product Details -->
+      <div class="product product-details clearfix">
+        <div class="col-md-6">
+          <div id="product-main-view">
+            <div class="product-view">
+              <img src="{{ product.image.url }}" alt="">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="product-body">
+            <h2 class="product-name">{{ product.name }}</h2>
+            <h3 class="product-price" style="color: #0f0f0f;">{% trans 'Price:' %}{{ product.price }}</h3>
+            <div>
+              <div class="product-rating">
+                <i class="fa fa-star{% if product.vote < 1 %}-o empty{% endif %}"></i>
+                <i class="fa fa-star{% if product.vote < 2 %}-o empty{% endif %}"></i>
+                <i class="fa fa-star{% if product.vote < 3 %}-o empty{% endif %}"></i>
+                <i class="fa fa-star{% if product.vote < 4 %}-o empty{% endif %}"></i>
+                <i class="fa fa-star{% if product.vote < 5 %}-o empty{% endif %}"></i>
+              </div>
+            </div>
+            <p><strong>{% trans 'Categoty:' %}</strong> {{ product.category }}</p>
+            <p>{{ product.description }}</p>
+
+            <div class="product-btns">
+              <div class="qty-input">
+<!--                <span class="text-uppercase">{% trans 'Quantity:' %}{{ product.quantity }} </span>-->
+              </div><br>
+              <button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i><a href="{% url 'add_to_cart' product.id %}">{% trans 'Add to Cart' %}</a></button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="product-tab">
+            <ul class="tab-nav">
+              <li class="active"><a data-toggle="tab" href="#tab1" id="tab">{% trans 'Reviews' %}</a></li>
+            </ul>
+            <div class="tab-content">
+              <div id="tab1" class="tab-pane fade in active">
+              <div class="row">
+                <div class="count-review">
+                  <h4><span>{{ review_list.count }}</span> Reviews</h4>
+                </div>
+                <div class="col-md-6 review">
+                  {% for review in review_list %}
+                  {% include "restaurant/review.html"%}
+                  {% endfor %}
+                </div>
+                <div class="col-md-6">
+
+                  <h4 class="text-uppercase">{% trans 'Write Your Review' %}</h4>
+                  <p class="erros"></p>
+
+                  <div class="review-form">
+                    <div class="form-group">
+                      <textarea class="review-input" placeholder="Your review" name="content" id="content" ></textarea>
+                    </div>
+                    <div class="form-group">
+                      <div class="input-rating">
+                        <strong class="text-uppercase">{% trans 'Your Rating: ' %}</strong>
+                        <div class="stars">
+                          <input type="radio" id="star5" name="vote" value="5" class="vote" /><label for="star5"></label>
+                          <input type="radio" id="star4" name="vote" value="4" class="vote" /><label for="star4"></label>
+                          <input type="radio" id="star3" name="vote" value="3" class="vote" /><label for="star3"></label>
+                          <input type="radio" id="star2" name="vote" value="2" class="vote" /><label for="star2"></label>
+                          <input type="radio" id="star1" name="vote" value="1" class="vote" /><label for="star1"></label>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="button" id="submit" value="Submit" class="review-submit">
+                  </div>
+                  {{ product.id|json_script:"product-id" }}
+                  <script>
+
+                    const roomName = JSON.parse(document.getElementById('product-id').textContent);
+
+                    const chatSocket = new WebSocket(
+                        'ws://'
+                        + window.location.host
+                        + '/ws/restaurant/review/'
+                        + roomName
+                        + '/'
+                    );
+                    console.log(chatSocket)
+
+                    chatSocket.onmessage = function(e) {
+                      const data = JSON.parse(e.data);
+                      if(data.review){
+                        const review = JSON.parse(data.review);
+                        const htmlRender = data.htmlRender;
+                        renderReview(review, htmlRender);
+                      }else{
+                        const htmlRender = data.htmlRender;
+                        renderErrors(htmlRender);
+                      }
+                      console.log("ok")
+
+                    };
+
+                    chatSocket.onclose = function(e) {
+                        console.error('Chat socket closed unexpectedly');
+                    };
+
+                    const review_submit = $('.review-submit');
+                    const review_content = $('.review-input');
+
+                    review_submit.on('click', () => {
+                      const content = review_content.val();
+                      const vote = document.querySelector('input[name="vote"]:checked').value;
+                      const userId = '{{user.id}}';
+                      if (userId) {
+                          sendReview(content, vote)
+                      }
+                      else {
+                          alert("You must login")
+                      }
+                      review_content.val("");
+                      $('input[name="vote"]').prop('checked', false);
+
+                    });
+
+                    function sendReview(content,vote) {
+                      chatSocket.send(JSON.stringify({
+                          'content': content,
+                          'vote': vote,
+                          'userId': '{{user.id}}',
+                          'productId': '{{product.id}}'
+                      }));
+                    }
+
+                    function renderReview(review, htmlRender) {
+                      console.log("aaa")
+                      var count = parseInt($('.count-review h4 span').text()) + 1
+                      $('.count-review h4 span').text(count)
+
+                      reviewArea = $('.review')
+                      reviewArea.prepend(`${htmlRender}`)
+                    }
+
+                    function renderErrors(htmlRender) {
+
+                      reviewArea = $('.erros')
+                      reviewArea.prepend(`${htmlRender}`)
+                    }
+
+                  </script>
+
+                </div>
+              </div>
+                <!-- review -->
+
+              <!-- review -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- /Product Details -->
+    </div>
+    <!-- /row -->
+  </div>
+  <!-- /container -->
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% load static %}
+{% load i18n %}
+
+{% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><pre>{{ message }}</pre></li>
+      {% endfor %}
+  </ul>
+{% endif %}

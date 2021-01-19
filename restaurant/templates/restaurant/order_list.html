@@ -1,0 +1,132 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}<title>{% trans 'Profile Page' %}</title>{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <!-- start registration -->
+    <div class="registration">
+        <div class="row single">
+            <div class="col-md-3 det">
+                <div class="w_sidebar">
+                    <div class="profile-sidebar">
+                        <!-- SIDEBAR USERPIC -->
+                        <div class="profile-userpic">
+                            {% if user.customer.avatar.url %}
+                            <img src="{{ user.customer.avatar.url }}" class="img-responsive" alt="">
+                            {% else %}
+                            <img src="{% static 'images/default.png' %}" class="img-responsive" alt=""/>
+                            {% endif%}
+                        </div>
+                        <div class="profile-usertitle">
+                            <div class="profile-usertitle-name">
+                                {{ user.username }}
+                            </div>
+                        </div>
+
+                        <div class="profile-usermenu">
+                            <ul class="nav">
+                                <li>
+                                    <a href="{% url 'edit_profile' %}" class="btn_profile" value=0>
+                                        <i class="material-icons">account_box</i>
+                                        {% trans 'My profile' %}</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'pending_order' %}" class="btn_profile" value=1>
+                                        <i class="material-icons">shopping_cart</i>
+                                        {% trans 'My order' %} </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'approved_order' %}" class="btn_profile" value=2>
+                                        <i class="material-icons">add_alert</i>
+                                        {% trans 'Approved order' %}</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'past_order' %}" class="btn_profile" value=3>
+                                        <i class="material-icons">view_list</i>
+                                        {% trans 'History order' %} </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- END MENU -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9 det ">
+                <h1 class="continue">Order List</h1>
+                {% for item in page_obj %}
+                <div class="order_list">
+                    <div class="cart-header center_inside">
+                        <div class="cart-sec simpleCart_shelfItem">
+                            <div class="cart-item-info">
+                                <a href="{% url 'order_detail' item.id %}"><h2>Order: {{ item.code }} {{ item.id }}</h2>
+                                </a>
+                                <ul class="qty">
+                                    <li><h3>Total price: ${{ item.total_price }}</h3></li>
+                                    <li><h3>Order date: {{ item.date_ordered }}</h3></li>
+                                </ul>
+                                {% if item.status == 'a' %}
+                                <ul class="qty">
+                                    <li><h3>Status: </h3></li>
+                                    <li><h3 style="color: dodgerblue">Approved</h3></li>
+                                </ul>
+                                {% elif item.status == 'p' %}
+                                <ul class="qty">
+                                    <li><h3>Status: </h3></li>
+                                    <li><h3 style="color: orange">Pending</h3></li>
+                                </ul>
+                                {% elif item.status == 'c' %}
+                                <ul class="qty">
+                                    <li><h3>Status: </h3></li>
+                                    <li><h3 style="color: red">Cancel</h3></li>
+                                </ul>
+                                {% elif item.status == 'f' %}
+                                <ul class="qty">
+                                    <li><h3>Status: </h3></li>
+                                    <li><h3 style="color: green">Finished</h3></li>
+                                </ul>
+                                {% else %}
+                                <h3>Status: None</h3>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                        <br/>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="justify-content-center d-flex">
+                    PAGE {{ page_obj.number }} OF {{ page_obj.paginator.num_pages }}
+                </div>
+
+                <div class="pagination d-flex justify-content-center">
+                    <span class="step-links ">
+
+                    {% if page_obj.has_previous %}
+                        <a class="d-inline-block head" href="?page=1">FIRST</a>
+                        <a class="d-inline-block" href="?page={{ page_obj.previous_page_number }}">
+                            <span class="glyphicon glyphicon-backward"></span>
+                        </a>
+                    {% endif %}
+
+                    {% if page_obj.has_next %}
+                        <a class="d-inline-block" href="?page={{ page_obj.next_page_number }}">
+                            <span class="glyphicon glyphicon-forward"></span>
+                        </a>
+                        <a class="d-inline-block head" href="?page={{ page_obj.paginator.num_pages }}">LAST</a>
+                    {% endif %}
+                    </span>
+                </div>
+
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<script type='text/javascript' src="{% static 'js/my_js_thanh.js' %}"></script>
+
+{% endblock %}

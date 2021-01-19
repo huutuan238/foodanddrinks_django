@@ -1,0 +1,180 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+{% load cart_tag %}
+
+
+{% block content %}
+<style>
+    #dialog-order_success, #dialog-fail, #dialog-exceed_quantity {
+        display: none;
+    }
+</style>
+
+<body>
+<div class="container">
+    <div class="check">
+        <div class="col-md-3 cart-total">
+            <a class="continue" href="{% url 'index' %}">Continue to basket</a>
+
+            <div class="price-details">
+                <h3>Price Details</h3>
+                {% for key,item in request.session.cart.items %}
+                <li class="last_price">{{ item.name }} x {{ item.quantity }} = ${{ item.price_of_all }}</li>
+                <br/>
+                {% endfor %}
+                <div class="clearfix"></div>
+            </div>
+
+            <ul class="total_price">
+                <li class="last_price"><h4>TOTAL</h4></li>
+                <li class="last_price"><span>${{ cart_total_amount }}</span></li>
+                <div class="clearfix"></div>
+            </ul>
+
+            <div class="clearfix"></div>
+            <form id="order-form" action="{% url 'make_order' %}" method="get">
+                <input class="place-order-button" type="submit" value="Place Order"/>
+            </form>
+        </div>
+
+        <div class="col-md-9 cart-items">
+            <h1 class="continue">My Order</h1>
+            {% for key,item in request.session.cart.items %}
+            <div class="order_list_items">
+                <div class="col-md-3">
+                    <img src="{{ item.image }}" class="img-responsive" alt=""/>
+                </div>
+
+                <div class="col-md-7">
+                    <h4><a href="{% url 'product_details' item.product_id %}">{{ item.name }}</a></h4>
+                    <p style="font-weight: bold">Category: {{ item.category }}</p>
+                    <text>{{ item.description }}</text>
+                    <ul class="qty">
+                        <li><p>Price per serve : ${{ item.price }}</p></li>
+                        <li><p>Quantity : {{ item.quantity }}</p></li>
+                    </ul>
+                </div>
+
+                <br/>
+
+                <div class="col-md-2">
+                    <div>
+                        <form class="delete-form" action="{% url 'item_clear' item.product_id %}" method="get">
+                            <input class="button_option" type="submit" value="Delete">
+                        </form>
+                    </div>
+
+                    <div>
+                        <form class="increment-form" action="{% url 'item_increment' item.product_id %}"
+                              method="get">
+                            <input class="button_option" type="submit" value="+">
+                        </form>
+                    </div>
+
+                    <div>
+                        <form class="decrement-form" action="{% url 'item_decrement' item.product_id%}"
+                              method="get">
+                            <input class="button_option" type="submit" value="-">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="clearfix"></div>
+    </div>
+</div>
+</body>
+
+<script>
+    $('#order-form').on('submit', function (e) {
+        e.preventDefault();
+        var $form = $(this);
+
+        $("#dialog-order_success").dialog({
+            position: {my: "center top", at: "center top", of: window},
+            width: 500,
+            autoOpen: false,
+            draggable: false,
+            close: function (event, ui) {
+                window.location.href = "{% url 'order' %}";
+            },
+            show: {
+                effect: "blind",
+                duration: 500,
+            },
+            hide: {
+                effect: "blind",
+                duration: 500,
+            }
+        }).prev(".ui-dialog-titlebar").css("background-color", "#09d1b6");
+
+        $("#dialog-fail").dialog({
+            position: {my: "center top", at: "center top", of: window},
+            width: 500,
+            autoOpen: false,
+            draggable: false,
+
+            show: {
+                effect: "blind",
+                duration: 500,
+            },
+            hide: {
+                effect: "blind",
+                duration: 500,
+            }
+        }).prev(".ui-dialog-titlebar").css("background-color", "red");
+
+        $("#dialog-exceed_quantity").dialog({
+            position: {my: "center top", at: "center top", of: window},
+            width: 500,
+            autoOpen: false,
+            draggable: false,
+            close: function (event, ui) {
+                window.location.href = "{% url 'order' %}";
+            },
+
+            show: {
+                effect: "blind",
+                duration: 500,
+            },
+            hide: {
+                effect: "blind",
+                duration: 500,
+            }
+        }).prev(".ui-dialog-titlebar").css("background-color", "red");
+
+        $.ajax({
+            type: 'get',
+            url: $form.attr("action"),
+            success: function (r) {
+                if (r == 'success')
+                    $("#dialog-order_success").dialog("open");
+                else {
+                    $("#exceed_quantity").text(r);
+                    $('#dialog-exceed_quantity').dialog("open");
+                }
+            },
+            error: function (r) {
+                window.location.href = "{% url 'index' %}";
+                $("#dialog-fail").dialog("open");
+            }
+        });
+    });
+</script>
+
+<div id="dialog-order_success" title="Info: Order Success">
+    <p>Your order has been sent!</p>
+</div>
+
+<div id="dialog-fail" title="Info: Fail">
+    <p>Oops! Something goes wrong !</p>
+</div>
+
+<div id="dialog-exceed_quantity" title="Info: Items' quantity exceeds">
+    <p>Your order exceeds the quantity!!!</p>
+    <p>Items that exceed the quantity: <span style="color: red" id="exceed_quantity"></span></p>
+</div>
+{% endblock %}

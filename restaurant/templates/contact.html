@@ -1,0 +1,57 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}<title>{% trans 'title' %}</title>{% endblock %}
+
+{% block content %}
+<style>
+    img {
+        width: 225px;
+        height: 225px;
+    }
+
+    .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
+</style>
+<div class="arriv">
+    <div class="container">
+        <div class="special">
+            <h3>Web Developers Credit</h3>
+            <div class="specia-top">
+                <div class="grid_2 col-md-4">
+                    <div class="center">
+                        <img src="{% static 'images/terran.png' %}"/>
+                    </div>
+                    <ul class="center">
+                        <li><h2>Dev1 - TeamDev</h2></li>
+                    </ul>
+                </div>
+                 <div class="grid_2 col-md-4">
+                    <div class="center">
+                        <img src="{% static 'images/default.jpg' %}"/>
+                    </div>
+                    <ul class="center">
+                        <li><h2>Default - PM</h2></li>
+                    </ul>
+                </div>
+                 <div class="grid_2 col-md-4">
+                    <div class="center">
+                        <img src="{% static 'images/default.jpg' %}"/>
+                    </div>
+                    <ul class="center">
+                        <li><h2>Default - SubPM</h2></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+

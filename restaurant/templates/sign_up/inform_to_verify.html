@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    {% load i18n %}
+    {% load static %}
+    <link href='//fonts.googleapis.com/css?family=Dosis:400,600' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style type="text/css">
+        #container {
+            left: 50%;
+            top: 30%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+            margin: auto;
+        }
+
+        #toGmail {
+            font-family: 'Dosis';
+            font-weight: bold;
+            font-size: 20px;
+            color: #000;
+            text-align: center;
+            margin-top: 10px;
+            cursor: pointer;
+            height: 50px;
+            width: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+        }
+
+        body {
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body background="{% static 'images/fail.jpg' %}">
+<div id="container">
+    <svg xmlns="http://www.w3.org/2000/svg" class="center" id="logo" viewBox="0 0 3000 700" width="600px"
+         height="200px" >
+        <path/>
+    </svg>
+    <div>
+        <button id="toGmail" class="center">
+            Go to Gmail! &nbsp <i class="material-icons">email</i>
+        </button>
+    </div>
+</div>
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.4.1/snap.svg-min.js"></script>
+<script>
+    window.onload = play();
+    document.getElementById('toGmail').addEventListener('click', () => {
+        location.href = "https://gmail.com";
+    })
+
+    function play() {
+        var blue = '#2980b9';
+        var l = Snap('#logo');
+        var p = l.select('path');
+        l.clear();
+        l.append(p);
+
+        p.attr({
+            fill: blue,
+            stroke: '#0066CC',
+        });
+
+        setTimeout(function () {
+            // modify this one line below, and see the result !
+            var logoTitle = 'Check mail to verify account :)';
+            var logoRandom = '';
+            var logoTitleContainer = l.text(0, '98%', '');
+            var possible = "-+*/|}{[]~\\\":;?/.><=+-_)(*&^%$#@!)}";
+            logoTitleContainer.attr({
+                fontSize: 250,
+                fontFamily: 'Dosis',
+                fontWeight: '600',
+                fill: 'red',
+            });
+
+            function generateRandomTitle(i, logoRandom) {
+                setTimeout(function () {
+                    logoTitleContainer.attr({text: logoRandom});
+                }, i * 70);
+            }
+
+            for (var i = 0; i < logoTitle.length + 1; i++) {
+                logoRandom = logoTitle.substr(0, i);
+                for (var j = i; j < logoTitle.length; j++) {
+                    logoRandom += possible.charAt(Math.floor(Math.random() * possible.length));
+                }
+                generateRandomTitle(i, logoRandom);
+                logoRandom = '';
+            }
+
+        }, 500);
+
+    }
+
+</script>
+</html>

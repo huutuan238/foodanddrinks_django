@@ -1,0 +1,39 @@
+{% load static %}
+{% load i18n %}
+
+<div class="row">
+<div class="col-12">
+  <div class="comments">
+
+    <div class="comment-box">
+      <img src="{{ review.user.avatar.url }}" class="avatar" >
+      <span class="commenter-name">
+        <a href="#">{{ review.user }}</a> <span class="comment-time">{{ review.date|date:"d M Y" }} {{ review.date|time:"H:i" }}</span>
+      </span>
+      <p class="comment-txt more">{{ review.content }}</p>
+      <div class="product-rating">
+
+        <i class="fa fa-star{% if review.vote < 1 %}-o empty{% endif %}"></i>
+        <i class="fa fa-star{% if review.vote < 2 %}-o empty{% endif %}"></i>
+        <i class="fa fa-star{% if review.vote < 3 %}-o empty{% endif %}"></i>
+        <i class="fa fa-star{% if review.vote < 4 %}-o empty{% endif %}"></i>
+        <i class="fa fa-star{% if review.vote < 5 %}-o empty{% endif %}"></i>
+      </div>
+      {% for comment in review.comment_set.all %}
+      <div class="comment-box replied">
+        <img src="{{ comment.review.user.avatar.url }}" class="avatar" >
+        <span class="commenter-name">
+          <a href="#">{{ comment.user }}</a> <span class="comment-time">{{ comment.date|date:"d M Y" }} {{ comment.date|time:"H:i" }}</span>
+        </span>
+        <p class="comment-txt more">{{ comment.content }}</p>
+      </div>
+      {% endfor %}
+      <div class="form-group">
+        <textarea class="input" name="content" placeholder="Your comment"></textarea>
+      </div>
+      <button class="primary-btn">Comment</button>
+
+    </div>
+  </div>
+</div>
+</div>

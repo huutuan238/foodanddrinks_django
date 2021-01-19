@@ -1,0 +1,46 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}<title>{% trans 'login Page' %}</title>{% endblock %}
+{% load socialaccount %}
+{% block content %}
+  <div class="arriv">
+  <div class="container">
+    <div class="registration">
+      {% if form.errors %}
+          <p>{% trans 'error login' %}</p>
+        {% endif %}
+
+        {% if next %}
+          {% if user.is_authenticated %}
+            <p>{% trans 'error login' %}</p>
+          {% else %}
+            <p>{% trans 'error login' %}</p>
+          {% endif %}
+        {% endif %}
+        <form id="loginForm" method="post" action="{% url 'login' %}">
+          {% csrf_token %}
+            <fieldset id="body">
+              <fieldset>
+                <label for="username">{% trans 'User name' %}</label>
+                <input type="text" name="username" id="username">
+              </fieldset>
+              <fieldset>
+                <label for="password">{% trans 'Password' %}</label>
+                <input type="password" name="password" id="password">
+              </fieldset>
+              <input type="submit" id="login" value="Sign in">
+              <label for="checkbox"><input type="checkbox" id="checkbox"> <i>{% trans 'Remember?' %}</i></label>
+            </fieldset>
+          <span><a href="#">{% trans 'forgot your password?' %}</a></span>
+          <div class="text-center social-btn">
+              <a href="#" class="btn btn-primary"><i class="fa fa-facebook"></i>&nbsp; Facebook</a>&nbsp
+              <a href="{% provider_login_url 'google' %}" class="btn btn-danger" style="width: 125px;"><i class="fa fa-google"></i>&nbsp; Google</a>&nbsp
+          </div>
+        </form>
+      <div class="clearfix"> </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

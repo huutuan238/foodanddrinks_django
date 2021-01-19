@@ -1,0 +1,108 @@
+{% load static %}
+{% load i18n %}
+
+<div class="header_bg">
+  <div class="container">
+    <div class="header">
+      <div class="head-t">
+        <div class="logo">
+          <a href="index.html"><img src="{% static 'images/logo.png' %}" class="img-responsive" alt=""/> </a>
+        </div>
+        <!-- start header_right -->
+        <div class="header_right">
+          <div class="rgt-bottom">
+            <div class="log" id="log">
+              <div class="login" >
+                <div id="loginContainer">
+                  {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %}" id="user">{% trans 'hi' %} {{ user.username }} !</a>
+                  {% else %}
+                    <a href="{% url 'login' %}" ><span>{% trans 'login' %}</span></a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="reg">
+              {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}">{% trans 'logout' %}</a>
+              {% else %}
+                <a href="{% url 'register' %}">{% trans 'register' %}</a>
+              {% endif %}
+            </div>
+<!--          <div class="cart box_1">-->
+<!--            <a href="{% url 'order' %}">-->
+<!--              <h3> <span class="simpleCart_total">$0.00</span> (<span id="simpleCart_quantity" class="simpleCart_quantity">0</span> items)<img src="{% static 'images/bag.png' %}" alt=""></h3>-->
+<!--            </a>-->
+<!--            {# <p><a href="javascript:;" class="simpleCart_empty">(empty card)</a></p> #}-->
+<!--            <div class="clearfix"> </div>-->
+<!--          </div>-->
+          <div class="create_btn">
+            <a href="{% url 'order' %}">{% trans 'checkout' %}</a>
+          </div>
+          <div class="clearfix"> </div>
+        </div>
+        <div class="search">
+            <form action="{%  url 'search_results' %}" method="get">
+                <!-- {% csrf_token %} -->
+                <div class="form-group">
+                    <input type="text" class="form-control" name="search" id="search exampleInputPassword1" placeholder="Search a Product" style="height: : 100%;">
+                    <input type="submit" value="" style="margin:0px 25px 5px auto; ">
+                </div>
+
+            </form>
+
+        </div>
+
+        </div>
+        <div class="clearfix"> </div>
+      </div>
+      <!-- start header menu -->
+      <ul class="megamenu skyblue">
+        <li class="active grid"><a class="color1" href="{% url 'index' %}">{% trans 'home' %}</a></li>
+        <li class="grid"><a class="color2" href="#">{% trans 'Category' %}</a>
+          <div class="megapanel">
+            <div class="row">
+              <div class="col1">
+                <div class="h_nav">
+                  <h4>{% trans 'List Category' %}</h4>
+                  {% if list_category %}
+                  <ul>
+                    {% for category in list_category %}
+                    <li id="category_item"><a href="{% url 'product_by_category' category.id %}">{{ category.name}}</a></li>
+                    {% endfor %}
+                  </ul>
+                  {% else %}
+                    <p>There are no category .</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="active grid"><a class="color3" href="{% url 'contact' %}">{% trans 'Contact' %}</a></li>
+        <li class="active grid">
+          <form action="{% url 'change_language' %}" method="post">
+          {% csrf_token %}
+            <select name="language" class="language">
+                {% get_available_languages as LANGUAGES %}
+                {% for language in LANGUAGES %}
+                <option value="{{ language.0 }}" {% if language.0 == LANGUAGE_CODE %} selected{% endif %}>
+                    {{ language.0|language_name_local }} ({{ language.0 }})
+                </option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Change language" class="language">
+          </form>
+        </li>
+       </ul>
+    </div>
+  </div>
+</div>
+<style type="text/css">
+  .form-group {
+    margin-bottom: 0px !important;
+}
+  #category_item:hover{
+    background-color: darkgray;
+  }
+</style>

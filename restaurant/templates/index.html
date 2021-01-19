@@ -1,0 +1,154 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}<title>{% trans 'Home Page' %}</title>{% endblock %}
+
+{% block content %}
+<style>
+    #dialog-success, #dialog-fail {
+        display: none;
+    }
+</style>
+
+<div class="arriv">
+    <div class="container">
+        <div class="special">
+            <h3>{% trans 'List Hot Products' %}</h3>
+            <div class="specia-top">
+                {% if page_obj %}
+                <ul class="grid_2">
+                    {% for product in page_obj %}
+                    <li>
+                        <a href="{% url 'product_details' product.id %}"><img src="{{ product.image.url }}"
+                                                                              class="img-responsive" alt=""></a>
+                        <div class="special-info grid_1 simpleCart_shelfItem">
+                            <h3>{{ product.name }}</h3>
+                            <div class="rate">
+                                <div class="product-rating">
+                                    <i class="fa fa-star{% if product.vote < 1 %}-o empty{% endif %}"></i>
+                                    <i class="fa fa-star{% if product.vote < 2 %}-o empty{% endif %}"></i>
+                                    <i class="fa fa-star{% if product.vote < 3 %}-o empty{% endif %}"></i>
+                                    <i class="fa fa-star{% if product.vote < 4 %}-o empty{% endif %}"></i>
+                                    <i class="fa fa-star{% if product.vote < 5 %}-o empty{% endif %}"></i>
+                                </div>
+                            </div>
+                            <div class="item_add"><span
+                                    class="item_price"><h6>{% trans 'Price: $' %}{{ product.price}}</h6></span></div>
+
+                            <div><h6>Product quantity: {{ product.quantity}}</h6></div>
+                            {% if product.quantity > 0 %}
+                            <div class="item_add">
+                                <span class="item_price">
+                                        <form method="get" action="{% url 'add_to_cart' product.id %}"
+                                              class="add_to_cart"
+                                              name="{{product.name}}">
+                                            <input class="add-to-cart-button" type="submit" value="Add to Cart">
+                                        </form>
+                                </span>
+                            </div>
+                            {% else %}
+                            <div class="item_add">
+                                <span class="item_price">
+                                    <h5 style="color: red">Sold Out</h5>
+                                </span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </li>
+                    {% endfor %}
+
+                    <div class="clearfix"></div>
+                    <div class="justify-content-center d-flex">
+                        PAGE {{ page_obj.number }} OF {{ page_obj.paginator.num_pages }}
+                    </div>
+
+                    <div class="pagination d-flex justify-content-center">
+                    <span class="step-links ">
+
+                    {% if page_obj.has_previous %}
+                        <a class="d-inline-block head" href="?page=1">FIRST</a>
+                        <a class="d-inline-block" href="?page={{ page_obj.previous_page_number }}">
+                            <span class="glyphicon glyphicon-backward"></span>
+                        </a>
+                    {% endif %}
+
+                    {% if page_obj.has_next %}
+                        <a class="d-inline-block" href="?page={{ page_obj.next_page_number }}">
+                            <span class="glyphicon glyphicon-forward"></span>
+                        </a>
+                        <a class="d-inline-block head" href="?page={{ page_obj.paginator.num_pages }}">LAST</a>
+                    {% endif %}
+                    </span>
+                    </div>
+                </ul>
+                {% else %}
+                <p>{% trans 'There are no products .' %}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('.add_to_cart').on('submit', function (e) {
+        e.preventDefault(); //this stops the form submit + refresh
+        var $form = $(this);
+        var $name = $form.attr("name");
+
+        $("#dialog-success").dialog({
+            position: {my: "center top", at: "center top", of: window},
+            width: 500,
+            autoOpen: false,
+            draggable: false,
+
+            show: {
+                effect: "blind",
+                duration: 500,
+            },
+            hide: {
+                effect: "blind",
+                duration: 500,
+            }
+        }).prev(".ui-dialog-titlebar").css("background-color", "#09d1b6");
+
+        $("#dialog-fail").dialog({
+            position: {my: "center top", at: "center top", of: window},
+            width: 500,
+            autoOpen: false,
+            draggable: false,
+
+            show: {
+                effect: "blind",
+                duration: 500,
+            },
+            hide: {
+                effect: "blind",
+                duration: 500,
+            }
+        }).prev(".ui-dialog-titlebar").css("background-color", "red");
+
+        $.ajax({
+            type: 'get',
+            url: $form.attr("action"),
+            success: function (r) {
+                $("#product_name").text($name);
+                $("#dialog-success").dialog("open");
+            },
+            error: function (r) {
+                $("#dialog-fail").dialog("open");
+            }
+        });
+    });
+</script>
+
+<div id="dialog-success" title="Info: Success">
+    <p>You have add <span id="product_name" style="color: red;"></span> into your cart!</p>
+</div>
+
+<div id="dialog-fail" title="Info: Fail">
+    <p>Oops! Something goes wrong !</p>
+</div>
+
+{% endblock %}
+
+

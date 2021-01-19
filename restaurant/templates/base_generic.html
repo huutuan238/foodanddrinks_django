@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    {% load i18n %}
+    {% block title %}<title>{% trans 'Home Page' %}</title>{% endblock %}
+    {% load static %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="{% static 'css/bootstrap.css' %}" rel='stylesheet' type='text/css'/>
+
+    <!-- jQuery (necessary JavaScript plugins) -->
+    <script type='text/javascript' src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="{% static 'js/jquery-ui-1.12.1/jquery-ui.js' %}"></script>
+
+    <!-- Custom Theme files -->
+    <link href="{% static 'css/style.css' %}" rel='stylesheet' type='text/css'/>
+    <link href="{% static 'css/my_css.css' %}" rel='stylesheet' type='text/css'/>
+    <link href="{% static 'css/my_css(thanh).css' %}" rel='stylesheet' type='text/css'/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="{% static 'js/jquery-ui-1.12.1/jquery-ui.css' %}" rel="stylesheet" type="text/css"/>
+    <!-- Custom Theme files -->
+
+    <!--//theme-style-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script type="application/x-javascript"> addEventListener("load", function () {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    } </script>
+
+    <!-- start menu -->
+    <link href="{% static 'css/megamenu.css' %}" rel="stylesheet" type="text/css" media="all"/>
+    <script type="text/javascript" src="{% static 'js/megamenu.js' %}"></script>
+    <script>$(document).ready(function () {
+        $(".megamenu").megamenu();
+    });</script>
+    <script src="{% static 'js/menu_jquery.js' %}"></script>
+    <script src="{% static 'js/simpleCart.min.js' %}"></script>
+    <script src="{% static 'js/my_js.js' %}"></script>
+    <!-- Bootstrap -->
+    <link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+
+    <!-- Slick -->
+    <link type="text/css" rel="stylesheet" href="{% static 'css/slick.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/slick-theme.css' %}"/>
+
+    <!-- Font Awesome Icon -->
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+
+    <!-- Custom stlylesheet -->
+    <link type="text/css" rel="stylesheet" href="{% static 'css/style1.css' %}"/>
+
+</head>
+<body>
+<!-- header_top -->
+<div class="top_bg">
+    <div class="container">
+        <div class="header_top">
+            <div class="top_right">
+                <ul>
+                    <li><a href="{% url 'contact' %}">{% trans 'Contact' %}</a></li>
+                    |
+                    <li><a href="#">{% trans 'Delivery information' %}</a></li>
+                </ul>
+            </div>
+            <div class="top_left">
+                <h2><span></span>{% trans 'Call us : 032 2352 782' %}</h2>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+</div>
+
+<!-- header -->
+{% include "header.html" %}
+{% block content %}<!-- default content text (typically empty) --> {% endblock %}
+{% include "footer.html" %}
+</body>
+<script src="{% static 'js/my_js_thanh.js' %}"></script>
+
+</html>

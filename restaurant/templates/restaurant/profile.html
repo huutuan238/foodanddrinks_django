@@ -1,0 +1,83 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}<title>{% trans 'Profile Page' %}</title>{% endblock %}
+
+{% block content %}
+<div class="arriv">
+    <div class="container">
+        <!-- start registration -->
+        <div class="registration">
+            <div class="row single">
+                <div class="col-md-3 det">
+                    <div class="w_sidebar">
+                        <div class="profile-sidebar">
+                            <!-- SIDEBAR USERPIC -->
+                            <div class="profile-userpic">
+                                {% if user.customer.avatar.url %}
+                                <img src="{{ user.customer.avatar.url }}" class="img-responsive" alt="">
+                                {% else %}
+                                <img src="{% static 'images/default.png' %}" class="img-responsive" alt=""/>
+                                {% endif%}
+                            </div>
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">
+                                    {{ user.username }}
+                                </div>
+                            </div>
+
+                            <div class="profile-usermenu">
+                                <ul class="nav">
+                                    <li>
+                                        <a href="{% url 'edit_profile' %}" class="btn_profile" value=0>
+                                            <i class="material-icons">account_box</i>
+                                            {% trans 'My profile' %}</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'pending_order' %}" class="btn_profile" value=1>
+                                            <i class="material-icons">shopping_cart</i>
+                                            {% trans 'My order' %} </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'approved_order' %}" class="btn_profile" value=2>
+                                            <i class="material-icons">add_alert</i>
+                                            {% trans 'Approved order' %}</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'past_order' %}" class="btn_profile" value=3>
+                                            <i class="material-icons">view_list</i>
+                                            {% trans 'History order' %} </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- END MENU -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9 det">
+                    <h2><span>{% trans 'My profile' %}</span></h2>
+                    <div class="registration_form">
+                        <!-- Form -->
+                        <div>
+                            <label>{% trans 'Full Name' %}</label>
+                            <input value="{{user.username}}" type="text" tabindex="1" required autofocus>
+                        </div>
+                        <div>
+                            <label>{% trans 'Phone Number' %}</label>
+                            <input value="{{user.customer.phone_number}}" type="text" tabindex="2" required autofocus>
+                        </div>
+                        <div>
+                            <label>{% trans 'Email' %}</label>
+                            <input value="{{user.email}}" type="email" tabindex="3" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<script type='text/javascript' src="{% static 'js/my_js_thanh.js' %}"></script>
+
+{% endblock %}
